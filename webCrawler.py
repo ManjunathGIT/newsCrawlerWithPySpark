@@ -68,6 +68,7 @@ class Crawling:
             else:
                 continue
             news_url = url
+            print(news_url)
             response = Request(news_url)
             html_content = urlopen(response).read()
             navigator = bs4.BeautifulSoup(html_content, 'html5lib')
@@ -76,12 +77,12 @@ class Crawling:
             date = navigator.find("span", {"class": "t11"})
             if date is not None:
                 datetext = self.getDateInNews(date.get_text()).strip().replace("\"\r\n\t", '')
-                #기사 제목 추출
+                # 기사 제목 추출
                 header = content.h3.get_text().strip().replace("\"\r\n\t", '')
-                #기사 내용 추출
-                if content.find(id = "articleBodyContents") is not None:
-                    text = content.find(id = "articleBodyContents").get_text()
-                    text = text.strip().replace("\"\r\n\t", '')
+                # 기사 내용 추출
+                """--------------table 처리 해야됨-------------"""
+                text = content.find("div", id = "articleBodyContents").get_text()
+                text = text.strip().replace("\"\r\n\t", '')
                 total = header.upper() + " " + text.upper()
                 #기사 내용과 키워드 매칭 & 카운트(TAG)
                 trigger = False
