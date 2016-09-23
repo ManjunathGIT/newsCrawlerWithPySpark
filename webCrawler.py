@@ -60,7 +60,6 @@ class Crawling:
         #print(words)
         count = 0
         for index, url in enumerate(list):
-
             if url.count("sid1=105") > 0:
                 high_tag = 'IT'
             elif url.count("sid1=101") > 0:
@@ -72,16 +71,35 @@ class Crawling:
             response = Request(news_url)
             html_content = urlopen(response).read()
             navigator = bs4.BeautifulSoup(html_content, 'html5lib')
-            content = navigator.find("div", id="main_content")
+            contents = navigator.find("div", id="main_content")
             #기사 입력일 추출
             date = navigator.find("span", {"class": "t11"})
             if date is not None:
                 datetext = self.getDateInNews(date.get_text()).strip().replace("\"\r\n\t", '')
                 # 기사 제목 추출
-                header = content.h3.get_text().strip().replace("\"\r\n\t", '')
+                header = contents.h3.get_text().strip().replace("\"\r\n\t", '')
                 # 기사 내용 추출
-                """--------------table 처리 해야됨-------------"""
-                text = content.find("div", id = "articleBodyContents").get_text()
+
+                text = ""
+                content = contents.find("div", id="articleBodyContents")
+                if content.find("table") is None:
+                    text = content.get_text()
+                else:
+                    # 봇이 쓴 기사는 제외
+                    continue
+                # else:
+                #     tables = content.find_all("table")
+                #     for table in tables:
+                #         tbodies = table.find_all("tbody")
+                #         for tbody in tbodies:
+                #             trs = tbody.find_all("tr")
+                #             for tr in trs:
+                #                 tds = tr.find_all("td")
+                #                 tds = [ele.text for ele in tds]
+                #                 tds = [ele for ele in tds if ele]
+                #                 for td in tds:
+                #                     text += td
+                # print(text)
                 text = text.strip().replace("\"\r\n\t", '')
                 total = header.upper() + " " + text.upper()
                 #기사 내용과 키워드 매칭 & 카운트(TAG)
