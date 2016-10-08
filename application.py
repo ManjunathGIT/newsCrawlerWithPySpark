@@ -107,8 +107,8 @@ class Storage():
                 sql = "INSERT INTO information (url, high, low, title, content, click_num, a_type, k_group, p_date, meta) "\
                       "SELECT %s, %s, %s, %s, %s, 0, %s, 0, %s, %s FROM DUAL "\
                       "WHERE NOT EXISTS (SELECT url FROM information WHERE url=%s)"
-                values = (info.getUrl(), info.getHigh(), info.getLow(), info.getTitle(), info.getContent(), \
-                          "Article", info.getPDate(), info.getMeta(), info.getUrl())
+                values = (info.url, info.high, info.low, info.title, info.content, \
+                          "Article", info.pDate(), info.meta(), info.url
                 cur.execute(sql, values)
                 self.db.commit()
                 print("[%d]Information Insertion Success!" % (index+1))

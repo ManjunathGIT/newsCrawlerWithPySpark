@@ -57,7 +57,7 @@ class Crawling:
         result = []
         for word in wordlist:
             words.append([word[0], word[1], 0])
-        #print(words)
+        # print(words)
         count = 0
         for index, url in enumerate(list):
             if url.count("sid1=105") > 0:
@@ -72,7 +72,7 @@ class Crawling:
             html_content = urlopen(response).read()
             navigator = bs4.BeautifulSoup(html_content, 'html5lib')
             contents = navigator.find("div", id="main_content")
-            #기사 입력일 추출
+            # 기사 입력일 추출
             date = navigator.find("span", {"class": "t11"})
             if date is not None:
                 datetext = self.getDateInNews(date.get_text()).strip().replace("\"\r\n\t", '')
@@ -99,10 +99,10 @@ class Crawling:
                 #                 tds = [ele for ele in tds if ele]
                 #                 for td in tds:
                 #                     text += td
-                # print(text)
+                print(text)
                 text = text.strip().replace("\"\r\n\t", '')
                 total = header.upper() + " " + text.upper()
-                #기사 내용과 키워드 매칭 & 카운트(TAG)
+                # 기사 내용과 키워드 매칭 & 카운트(TAG)
                 trigger = False
                 tags = "["
                 for word in words:
@@ -119,37 +119,37 @@ class Crawling:
                 tags += "]"
                 if high_tag is '사회':
                     high_tag = '경제'
-                #기사 표현을 위한 og meta 태그 추출
+                # 기사 표현을 위한 og meta 태그 추출
                 og_title = navigator.find("meta", property="og:title")
                 og_type = navigator.find("meta", property="og:type")
                 og_url = navigator.find("meta", property="og:url")
                 og_image = navigator.find("meta", property="og:image")
                 og_description = navigator.find("meta", property="og:description")
                 metas = str(og_title) + str(og_type) + str(og_url) + str(og_image) + str(og_description)
-                #내용물 SET
+                # 내용물 SET
                 info = Information()
-                info.setUrl(news_url.replace('&', '%26'))
-                info.setTitle(header)
-                info.setContent(text)
-                info.setPDate(datetext)
-                info.setHigh(high_tag)
-                info.setLow(tags)
-                info.setMeta(metas.replace('&', '%26'))
+                info.url(news_url.replace('&', '%26'))
+                info.title(header)
+                info.content(text)
+                info.pDate(datetext)
+                info.high(high_tag)
+                info.low(tags)
+                info.meta(metas.replace('&', '%26'))
                 result.append(info)
-                print('[%d개] ' % (count) + info.toString() + ' Original')
+                print('[%d개] ' % (count) + str(info) + ' Original')
         return result
 
     def getUrl(self, high, SPAN):
         """
         네이버 뉴스 기사가 표현하는 모든 항목별, 날짜별, 페이지별 URL들을 각각 생성해 반환한다.
         """
-        #sid2=731 : 모바일
+        # sid2=731 : 모바일
         sid1s = [["IT", 105], ["경제", 101]]
         sid2s_it = [["모바일", 731], ["인터넷/SNS", 226], ["통신/뉴미디어", 227], \
-                ["IT일반", 230], ["보안/해킹", 732], ["컴퓨터", 283], \
-                ["게임/리뷰", 229], ["과학 일반", 228]]
+                    ["IT일반", 230], ["보안/해킹", 732], ["컴퓨터", 283], \
+                    ["게임/리뷰", 229], ["과학 일반", 228]]
         sid2s_ec = [["금융", 259], ["증권", 258], ["산업/재계", 261], ["중기/벤쳐", 771], \
-                ["부동산", 260], ["글로벌경제", 262], ["생활경제", 310], ["경제일반", 263]]
+                    ["부동산", 260], ["글로벌경제", 262], ["생활경제", 310], ["경제일반", 263]]
         d = datetime.today()
         urls = []
         # SPAN은 현재날짜에서 뺀 날짜까지 긁어올 수
@@ -159,9 +159,9 @@ class Crawling:
                 if sid1[0] == high:
                     for sid2 in sid2s_it if sid1[0] is "IT" else sid2s_ec:
                         url = "http://news.naver.com/main/list.nhn?sid2=" + str(sid2[1]) + "&sid1=" + str(sid1[1]) + "&mid=shm&mode=LS2D&date=" + date
-                        pages=self.getPage(url + "&page=1")
+                        pages = self.getPage(url + "&page=1")
                         for page in range(pages):
-                            #최종 URL(sid1, sid2, date, page별 URL)을 배열에 저장
+                            # 최종 URL(sid1, sid2, date, page별 URL)을 배열에 저장
                             final_url = url + "&page=" + str(page + 1)
                             urls.append(final_url)
         return urls
@@ -192,13 +192,13 @@ class Crawling:
         len_urls = len(naver_urls)
         for i in range(len_urls):
             naver_url = naver_urls[i]
-    	    # 요청
+            # 요청
             response = Request(naver_url)
-    	    # 응답으로 부터 HTML 추출
+            # 응답으로 부터 HTML 추출
             html_content = urlopen(response).read()
-    	    # HTML 파싱
+            # HTML 파싱
             navigator = bs4.BeautifulSoup(html_content, 'html5lib')
-    	    # 네비게이터를 이용해 원하는 링크 리스트 가져오기
+            # 네비게이터를 이용해 원하는 링크 리스트 가져오기
             # 헤드라인 10개
             headLineTags = navigator.find("ul", {"class": "type06_headline"})
             # 헤드라인이 존재하는지 확인
