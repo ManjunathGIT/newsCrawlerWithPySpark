@@ -13,7 +13,7 @@ You can select what this app does on `main.py`.
 Connect this app to DB based Mysql and act like DAO with jabjangDTO.py
 
 ### jabjangDTO.py
-this is DTO for Mysql and K_menas clustering.
+this is DTO for Mysql.
 
 ### K_MEANS.py
 With `PySpark 1.6.1`, clustering and labeling crawled news in mysql by already cherry-picked tags.
